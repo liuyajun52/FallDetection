@@ -10,6 +10,8 @@ import android.content.Intent;
 /**开机启动监听器，用于在开机启动完成后启动行为识别服务
  * @author liuyajun
  *
+ *
+ *一次修改
  */
 public class BootReceiver extends BroadcastReceiver {
 
