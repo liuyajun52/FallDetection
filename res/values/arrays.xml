@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="position_array">
+        <item >挂于胸前</item>
+        <item >上衣口袋</item>
+        <item >裤子口袋</item>
+    </string-array>
+    
+</resources>
