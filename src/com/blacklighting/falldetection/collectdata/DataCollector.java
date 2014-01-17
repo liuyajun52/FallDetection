@@ -40,13 +40,13 @@ public class DataCollector implements SensorEventListener {
 	private Sensor mASensor;
 	private Sensor mMagneticFieldSensor;
 	private Sensor mGsensor;
-	private DataArray datas; // 存储一顿时间之内的绝对坐标系内的加速度和旋转角度
+	private DataArray datas; // 存储一段时间之内的绝对坐标系内的加速度和旋转角度
 
 	File tempFile;
 	int ij = 0;
 
 	public static final int DATALENGTH = 200; // 数据结构链表的长度
-	float zThreshold = 15.0f; // z轴加速的的阈值
+	float zThreshold = 12.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
 	Context context;
@@ -99,6 +99,10 @@ public class DataCollector implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent arg0) {
 
+		if(arg0.accuracy==SensorManager.SENSOR_STATUS_UNRELIABLE){
+			return;
+		}
+		
 		float tempx, tempy, tempz;
 		if (arg0.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 			linearAccelerometerValues = arg0.values.clone();
@@ -129,34 +133,34 @@ public class DataCollector implements SensorEventListener {
 			if (isCounting && ++counter == DATALENGTH / 2) {
 				isCounting = false;
 				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
-				tempFile = new File(Environment.getExternalStorageDirectory()
-						+ "/" + "temp" +(ij++) + ".csv");
-				FileOutputStream out=null;
-				try {
-					 out = new FileOutputStream(tempFile);
-					for (int i = 0; i < datas.size(); i++) {
-						out.write(("" + datas.get(i).getAccValuei(0) + ","
-								+ datas.get(i).getAccValuei(1) + ","
-								+ datas.get(i).getAccValuei(2) + ","
-								+ datas.get(i).getGValuei(0) + ","
-								+ datas.get(i).getGValuei(1) + ","
-								+ datas.get(i).getGValuei(2) + "\n").getBytes());
-					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}finally{
-					try {
-						out.flush();
-						out.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+//				tempFile = new File(Environment.getExternalStorageDirectory()
+//						+ "/" + "temp" +(ij++) + ".csv");
+//				FileOutputStream out=null;
+//				try {
+//					 out = new FileOutputStream(tempFile);
+//					for (int i = 0; i < datas.size(); i++) {
+//						out.write(("" + datas.get(i).getAccValuei(0) + ","
+//								+ datas.get(i).getAccValuei(1) + ","
+//								+ datas.get(i).getAccValuei(2) + ","
+//								+ datas.get(i).getGValuei(0) + ","
+//								+ datas.get(i).getGValuei(1) + ","
+//								+ datas.get(i).getGValuei(2) + "\n").getBytes());
+//					}
+//				} catch (FileNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}finally{
+//					try {
+//						out.flush();
+//						out.close();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
 
 				DataAnalysiser analysiser = new DataAnalysiser(datas);
 				boolean analysisResult = analysiser.analysis();
