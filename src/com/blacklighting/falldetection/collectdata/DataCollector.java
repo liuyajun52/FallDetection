@@ -4,22 +4,18 @@
 package com.blacklighting.falldetection.collectdata;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import com.blacklighting.falldetection.dataanalysis.DataAnalysiser;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Environment;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.blacklighting.falldetection.dataanalysis.DataAnalysiser;
 
 /**
  * 传感器数据收集器
@@ -132,7 +128,7 @@ public class DataCollector implements SensorEventListener {
 			}
 			if (isCounting && ++counter == DATALENGTH / 2) {
 				isCounting = false;
-				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
 //				tempFile = new File(Environment.getExternalStorageDirectory()
 //						+ "/" + "temp" +(ij++) + ".csv");
 //				FileOutputStream out=null;
@@ -147,10 +143,10 @@ public class DataCollector implements SensorEventListener {
 //								+ datas.get(i).getGValuei(2) + "\n").getBytes());
 //					}
 //				} catch (FileNotFoundException e) {
-//					// TODO Auto-generated catch block
+//					// 
 //					e.printStackTrace();
 //				} catch (IOException e) {
-//					// TODO Auto-generated catch block
+//					// 
 //					e.printStackTrace();
 //				}finally{
 //					try {

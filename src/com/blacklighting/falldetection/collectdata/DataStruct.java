@@ -33,12 +33,16 @@ public class DataStruct {
 	public void setgValue(float[] gValue) {
 		this.gValue = gValue;
 	}
-	
-	public float getGValuei(int index){
+
+	public float getGValueComponent(int index) {
 		return gValue[index];
 	}
-	
-	public float getAccValuei(int index){
+
+	public float getAccValueComponent(int index) {
 		return accValue[index];
+	}
+
+	public long getTime() {
+		return timestamp;
 	}
 }
