@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -34,12 +33,13 @@ public class DataCollector implements SensorEventListener {
 	private Sensor mGsensor;
 	private DataArray datas; // 存储一顿时间之内的绝对坐标系内的加速度和旋转角度
 
-	public static final int DATALENGTH = 600; // 数据结构链表的长度
-	float zThreshold = 8.0f; // z轴加速的的阈值
+	public static final int DATALENGTH = 300; // 数据结构链表的长度
+	float zThreshold = -20.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
-
+	Context context;
 	public DataCollector(Context context) {
+		this.context=context;
 		mSensorManager = (SensorManager) context
 				.getSystemService(Context.SENSOR_SERVICE);
 		mLinearSensor = mSensorManager
@@ -79,11 +79,15 @@ public class DataCollector implements SensorEventListener {
 
 	}
 
+	public void onFirstWarming(){
+		
+	}
+	
 	@Override
 	public void onSensorChanged(SensorEvent arg0) {
 
 		float tempx, tempy, tempz, zw, xw, yw;
-		Log.v("DataCollector",""+arg0.values[0]+"\t"+arg0.values[1]+"\t"+arg0.values[2]+"\t");
+//		Log.v("DataCollector",""+arg0.values[0]+"\t"+arg0.values[1]+"\t"+arg0.values[2]+"\t");
 		if (arg0.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 			linearAccelerometerValues = arg0.values;
 
@@ -129,15 +133,31 @@ public class DataCollector implements SensorEventListener {
 			datas.addData(new DataStruct(arg0.timestamp,
 					linearAccelerometerValues,gValues));
 
-			if (Math.abs(linearAccelerometerValues[2]) >= zThreshold
+			if (linearAccelerometerValues[2] < zThreshold
 					&& !isCounting) {
 				isCounting = true;		//当发现有数据超过阈值时开始计数
 			}
 			if (isCounting && ++counter == DATALENGTH/2) {
 				isCounting = false;
 				
+				onFirstWarming();
+				
+//				Log.v("warmingliuyajun", "一次警告");
+//				Toast.makeText(context.getApplicationContext(), "警告！！！！！！！！！！", Toast.LENGTH_LONG).show();
+//				
+//				Intent i=new Intent(context,WarmingActivity.class);
+//				context.startActivity(i);
+				
+//				Builder b=new Builder(context.getApplicationContext());
+//				b.setTitle("警告");
+//				b.setMessage(""+linearAccelerometerValues[2]);
+//				b.setPositiveButton("确定", null);
+//				b.create().show();
+				
+				
 				//数据收集满了之后，将数据提交到数据分析模块
 				datas=new DataArray(DATALENGTH);		//清空数据
+				counter=0;
 			}
 
 		} else {

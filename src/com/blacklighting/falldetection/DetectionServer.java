@@ -28,7 +28,18 @@ public class DetectionServer extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		collector=new DataCollector(getApplicationContext());
+		collector=new DataCollector(getApplicationContext()){
+
+			@Override
+			public void onFirstWarming() {
+				// TODO Auto-generated method stub
+				super.onFirstWarming();
+				Intent i=new Intent(getApplicationContext(),WarmingActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(i);
+			}
+			
+		};
 	}
 
 	@Override
