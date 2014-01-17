@@ -44,6 +44,14 @@ public class DataArray {
 	public List<DataStruct> getDataArray() {
 		return dataArray;
 	}
+
+	public DataStruct get(int index){
+		return dataArray.get(index);
+	}
+	
+	public int size(){
+		return dataArray.size();
+	}
 	
 
 }

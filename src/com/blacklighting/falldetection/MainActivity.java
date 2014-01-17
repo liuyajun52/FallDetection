@@ -23,6 +23,8 @@ public class MainActivity extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.setting);
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
+		Intent i=new Intent(MainActivity.this,DetectionServer.class);
+		startService(i);
 
 		sp.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
 
