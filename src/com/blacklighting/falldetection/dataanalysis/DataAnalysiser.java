@@ -16,8 +16,8 @@ public class DataAnalysiser {
 	final int STILLSIZE = 20;
 	final Double TRANSFORM_TO_SECOND = Double.valueOf(1000000000);
 	final double ROTATION_THRESHHOLE = Math.PI / 3; // 旋转角度的阈值
-	final double VARIANCE_THRESHHOLE = 9.8; // 静止方差阈值
-	final double ZD_THRESHHOLE = 0.3; // 竖直位移最小量的阈值
+	final double VARIANCE_THRESHHOLE = 9.8*0.5; // 静止方差阈值
+	final double ZD_THRESHHOLE = 0.4; // 竖直位移最小量的阈值
 	private DataArray dataArray;
 
 	public DataAnalysiser(DataArray dataArray) {
@@ -28,7 +28,7 @@ public class DataAnalysiser {
 	 * @return 分析结果
 	 */
 	public boolean analysis() {
-		return firstAnalysis() && secondAnalysis() && thirdAnaylsis();
+		return firstAnalysis() && secondAnalysis() &&thirdAnaylsis();
 	}
 
 	/**
@@ -118,22 +118,23 @@ public class DataAnalysiser {
 	 * @return
 	 */
 	private boolean thirdAnaylsis() {
-		Double minZDisplacement = 0.0;
-		Double tempvPre = 0.0, tempvNow = 0.0;
-		for (int i = 0; i < dataArray.size() - 1; i++) {
-			Double timeNow = Double.valueOf( dataArray.get(i + 1).getTime());
-			Double timePre = Double.valueOf(dataArray.get(i).getTime());
-			Double timeSt=timeNow-timePre;
-			Double time = timeSt/ TRANSFORM_TO_SECOND;
-			tempvNow = tempvPre
-					+ 0.5
-					* (dataArray.get(i).getAccValueComponent(2) + dataArray
-							.get(i + 1).getAccValueComponent(2)) * time;
-			minZDisplacement += (0.5 * (tempvPre + tempvNow) * time);
-			tempvPre = tempvNow;
-		}
-
-		return minZDisplacement > ZD_THRESHHOLE;
+//		Double minZDisplacement = 0.0;
+//		Double tempvPre = 0.0, tempvNow = 0.0;
+//		for (int i = 0; i < dataArray.size() - 1; i++) {
+//			Double timeNow = Double.valueOf( dataArray.get(i + 1).getTime());
+//			Double timePre = Double.valueOf(dataArray.get(i).getTime());
+//			Double timeSt=timeNow-timePre;
+//			Double time = timeSt/ TRANSFORM_TO_SECOND;
+//			tempvNow = tempvPre
+//					+ 0.5
+//					* (dataArray.get(i).getAccValueComponent(2) + dataArray
+//							.get(i + 1).getAccValueComponent(2)) * time;
+//			minZDisplacement += (0.5 * (tempvPre + tempvNow) * time);
+//			tempvPre = tempvNow;
+//		}
+//
+//		return minZDisplacement > ZD_THRESHHOLE;
+		return true;
 	}
 
 }

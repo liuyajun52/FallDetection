@@ -4,12 +4,16 @@
 package com.blacklighting.falldetection.collectdata;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Environment;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -29,7 +33,7 @@ public class DataCollector implements SensorEventListener {
 	private float[] accelerometerValues; // 加速度实时数值
 	private float[] magneticFieldValues; // 磁力实时数值
 	private float[] gValues;
-	private float[] RM; // 旋转矩阵
+	// private float[] RM; // 旋转矩阵
 	private Display display;
 	private SensorManager mSensorManager;
 	private Sensor mLinearSensor;
@@ -39,13 +43,13 @@ public class DataCollector implements SensorEventListener {
 	private DataArray datas; // 存储一段时间之内的绝对坐标系内的加速度和旋转角度
 
 	File tempFile;
-	int ij = 0;
 
 	public static final int DATALENGTH = 200; // 数据结构链表的长度
-	float zThreshold = 12.0f; // z轴加速的的阈值
+	float zThreshold = -12.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
 	Context context;
+	float[] orac = new float[9];
 
 	public DataCollector(Context context) {
 		this.context = context;
@@ -95,68 +99,99 @@ public class DataCollector implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent arg0) {
 
-		if(arg0.accuracy==SensorManager.SENSOR_STATUS_UNRELIABLE){
+		if (arg0.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
 			return;
 		}
-		
+
 		float tempx, tempy, tempz;
 		if (arg0.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 			linearAccelerometerValues = arg0.values.clone();
 
-			if (RM==null|| linearAccelerometerValues == null) {
+			if (magneticFieldValues == null || accelerometerValues == null
+					|| gValues == null || linearAccelerometerValues == null) {
 				return;
 			}
 
-			// 用旋转矩阵做坐标变换
+			float xw = orac[1];
+			float yw = orac[2];
+			float zw = orac[0];
 
-			tempx = linearAccelerometerValues[0] * RM[0]
-					+ linearAccelerometerValues[1] * RM[3]
-					+ linearAccelerometerValues[2] * RM[6];
-			tempy = linearAccelerometerValues[0] * RM[1]
-					+ linearAccelerometerValues[1] * RM[4]
-					+ linearAccelerometerValues[2] * RM[7];
-			tempz = linearAccelerometerValues[0] * RM[2]
-					+ linearAccelerometerValues[1] * RM[5]
-					+ linearAccelerometerValues[2] * RM[8];
+			// z轴变换
+			tempx = linearAccelerometerValues[0];
+			tempy = linearAccelerometerValues[1];
+			tempz = linearAccelerometerValues[2];
+
+			linearAccelerometerValues[0] = (float) (tempx * Math.cos(zw) - tempy
+					* Math.sin(zw));
+			linearAccelerometerValues[1] = (float) (tempx * Math.sin(zw) + tempy
+					* Math.cos(zw));
+
+			tempx = linearAccelerometerValues[0];
+			tempy = linearAccelerometerValues[1];
+			tempz = linearAccelerometerValues[2];
+			// x轴变换
+			linearAccelerometerValues[1] = (float) (tempy * Math.cos(xw) - tempz
+					* Math.sin(xw));
+			linearAccelerometerValues[2] = (float) (tempy * Math.sin(xw) + tempz
+					* Math.cos(xw));
+
+			tempx = linearAccelerometerValues[0];
+			tempy = linearAccelerometerValues[1];
+			tempz = linearAccelerometerValues[2];
+			// y轴变换
+			linearAccelerometerValues[2] = (float) (tempz * Math.cos(yw) - tempx
+					* Math.sin(yw));
+			linearAccelerometerValues[0] = (float) (tempz * Math.sin(yw) + tempx
+					* Math.cos(yw));
+
+			// // 用旋转矩阵做坐标变换
+			//
+			// tempx = linearAccelerometerValues[0] * RM[0]
+			// + linearAccelerometerValues[1] * RM[1]
+			// + linearAccelerometerValues[2] * RM[2];
+			// tempy = linearAccelerometerValues[0] * RM[3]
+			// + linearAccelerometerValues[1] * RM[4]
+			// + linearAccelerometerValues[2] * RM[5];
+			// tempz = linearAccelerometerValues[0] * RM[6]
+			// + linearAccelerometerValues[1] * RM[7]
+			// + linearAccelerometerValues[2] * RM[8];
 
 			// 将数据添加到数据链表中
-			datas.addData(new DataStruct(arg0.timestamp, new float[] { tempx,
-					tempy, tempz }, gValues.clone()));
+			datas.addData(new DataStruct(arg0.timestamp,
+					linearAccelerometerValues, gValues.clone()));
 
-			if (tempz > zThreshold && !isCounting) {
+			if (tempz < zThreshold && !isCounting) {
 				isCounting = true; // 当发现有数据超过阈值时开始计数
 			}
 			if (isCounting && ++counter == DATALENGTH / 2) {
 				isCounting = false;
-//				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
-//				tempFile = new File(Environment.getExternalStorageDirectory()
-//						+ "/" + "temp" +(ij++) + ".csv");
-//				FileOutputStream out=null;
-//				try {
-//					 out = new FileOutputStream(tempFile);
-//					for (int i = 0; i < datas.size(); i++) {
-//						out.write(("" + datas.get(i).getAccValuei(0) + ","
-//								+ datas.get(i).getAccValuei(1) + ","
-//								+ datas.get(i).getAccValuei(2) + ","
-//								+ datas.get(i).getGValuei(0) + ","
-//								+ datas.get(i).getGValuei(1) + ","
-//								+ datas.get(i).getGValuei(2) + "\n").getBytes());
-//					}
-//				} catch (FileNotFoundException e) {
-//					// 
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// 
-//					e.printStackTrace();
-//				}finally{
-//					try {
-//						out.flush();
-//						out.close();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
+				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
+				tempFile = new File(Environment.getExternalStorageDirectory()
+						+ "/" + "temp" + ".csv");
+				FileOutputStream out = null;
+				try {
+					out = new FileOutputStream(tempFile);
+					for (int i = 0; i < datas.size(); i++) {
+						out.write(("" + datas.get(i).getAccValueComponent(0)
+								+ "," + datas.get(i).getAccValueComponent(1)
+								+ "," + datas.get(i).getAccValueComponent(2) + "\n")
+								.getBytes());
+					}
+				} catch (FileNotFoundException e) {
+					//
+					e.printStackTrace();
+				} catch (IOException e) {
+					//
+					e.printStackTrace();
+				} finally {
+					try {
+						out.flush();
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
 				DataAnalysiser analysiser = new DataAnalysiser(datas);
 				boolean analysisResult = analysiser.analysis();
@@ -197,7 +232,8 @@ public class DataCollector implements SensorEventListener {
 				return;
 			}
 
-			if (accelerometerValues == null || magneticFieldValues == null) {
+			if (accelerometerValues == null || magneticFieldValues == null
+					|| gValues == null) {
 				return;
 			}
 
@@ -205,7 +241,7 @@ public class DataCollector implements SensorEventListener {
 
 			if (SensorManager.getRotationMatrix(R, null, accelerometerValues,
 					magneticFieldValues)) {
-				RM = R;
+				SensorManager.getOrientation(R, orac);
 			}
 		}
 
