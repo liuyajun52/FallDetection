@@ -9,7 +9,7 @@ import android.content.Intent;
 
 /**开机启动监听器，用于在开机启动完成后启动行为识别服务
  * @author liuyajun
- *
+ *ceshi
  *
  *一次修改
  */
