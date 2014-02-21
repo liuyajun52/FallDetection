@@ -178,7 +178,7 @@ public class DataCollector implements SensorEventListener {
 								.getBytes());
 					}
 				} catch (FileNotFoundException e) {
-					//
+					
 					e.printStackTrace();
 				} catch (IOException e) {
 					//

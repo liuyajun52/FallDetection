@@ -22,9 +22,9 @@ public class WarmingActivity extends Activity implements OnClickListener,
 	private LocationManager locationManager;
 	private Location currentLocation;
 	private SmsManager smsManager;
-	private MHandler mHandler;
+	private MHandler mHandler = new MHandler(this);;
 	private String phoneNumber;
-	private String smsContent = "软件检测到的老人发生了跌倒，请尽快采取措施，位置：";
+	private String smsContent = "软件检测到您的家属发生了跌倒，请尽快采取措施，位置：";
 	private TextView counterView;
 
 	@Override
@@ -35,7 +35,6 @@ public class WarmingActivity extends Activity implements OnClickListener,
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		smsManager = SmsManager.getDefault();
-		mHandler = new MHandler(this);
 		phoneNumber = PreferenceManager.getDefaultSharedPreferences(
 				getApplicationContext()).getString("phone", null);
 		findViewById(R.id.concleButton).setOnClickListener(this);
@@ -88,9 +87,12 @@ public class WarmingActivity extends Activity implements OnClickListener,
 				}
 			}
 			// 发送求助短信
-			if (phoneNumber != null && currentLocation != null) {
-				smsManager.sendTextMessage(phoneNumber, null, smsContent
-						+ currentLocation.toString(), null, null);
+			if (phoneNumber != null) {
+				smsManager.sendTextMessage(phoneNumber, null,
+						smsContent
+								+ (currentLocation == null ? "未知"
+										: currentLocation.toString()), null,
+						null);
 			}
 			mHandler.sendEmptyMessage(-1);
 		}
@@ -118,7 +120,7 @@ public class WarmingActivity extends Activity implements OnClickListener,
 			if (msg.what == -1) {
 				act.get().finish();
 			} else {
-				act.get().counterView.setText(msg.what);
+				act.get().counterView.setText("" + msg.what);
 			}
 		}
 
