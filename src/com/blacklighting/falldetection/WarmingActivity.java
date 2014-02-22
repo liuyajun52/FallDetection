@@ -1,6 +1,7 @@
 package com.blacklighting.falldetection;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,10 +25,8 @@ public class WarmingActivity extends Activity implements OnClickListener,
 		LocationListener {
 	private LocationManager locationManager;
 	private Location currentLocation;
-	private SmsManager smsManager;
 	private MHandler mHandler = new MHandler(this);;
 	private String phoneNumber;
-	private String smsContent = "软件检测到您的家属发生了跌倒，请尽快采取措施，位置：";
 	private TextView counterView;
 	private RingtoneManager mRingtoneManager;
 	private Ringtone ringtone;
@@ -57,7 +56,6 @@ public class WarmingActivity extends Activity implements OnClickListener,
 
 		// 注册位置监听器，开始收集地理位置信息
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		smsManager = SmsManager.getDefault();
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				1000, 0, WarmingActivity.this);
 
@@ -71,6 +69,13 @@ public class WarmingActivity extends Activity implements OnClickListener,
 		super.onDestroy();
 		// 活动结束时结束收集地理位置信息
 		locationManager.removeUpdates(WarmingActivity.this);
+		if (countThread != null) {
+			countThread.interrupt(); // 停止计时
+			countThread = null;
+		}
+		if (ringtone.isPlaying()) {
+			ringtone.stop(); // 停止播放提示音
+		}
 	}
 
 	@Override
@@ -84,27 +89,20 @@ public class WarmingActivity extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.stopButton:
-			if (countThread != null) {
-				countThread.interrupt(); // 停止计时
-				countThread = null;
-			}
-			if (ringtone.isPlaying()) {
-				ringtone.stop(); // 停止播放提示音
-			}
 			finish();
 			break;
 		}
 	}
 
 	class CountThread extends Thread {
-
+		private boolean isStoped=false;
 		@Override
 		public void run() {
 			super.run();
 
 			// 倒数一分钟
 			for (int i = 0; i < 60; i++) {
-				if (isInterrupted()) {
+				if (isStoped) {
 					return;
 				}
 				try {
@@ -114,27 +112,21 @@ public class WarmingActivity extends Activity implements OnClickListener,
 					e.printStackTrace();
 				}
 			}
-			// 发送求助短信
-			if (phoneNumber != null) {
-				smsManager.sendTextMessage(phoneNumber, null,
-						smsContent
-								+ (currentLocation == null ? "未知"
-										: currentLocation.toString()), null,
-						null);
-			}
-			mHandler.sendEmptyMessage(-1);
+			mHandler.sendEmptyMessage(-2);
 		}
 
 		@Override
 		public void interrupt() {
 			super.interrupt();
-			mHandler.sendEmptyMessage(-1);
+			isStoped=true;
 		}
 
 	}
 
 	static class MHandler extends Handler {
 		private WeakReference<WarmingActivity> act;
+		private String smsContent = "软件检测到您的家属发生了跌倒，请尽快采取措施，位置：";
+		private Location location;
 
 		public MHandler(WarmingActivity act) {
 			this.act = new WeakReference<WarmingActivity>(act);
@@ -143,10 +135,34 @@ public class WarmingActivity extends Activity implements OnClickListener,
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			if (msg.what == -1) {
+			switch (msg.what) {
+			case -1:
 				act.get().finish();
-			} else {
+				break;
+			case -2:
+				// 发送求助短信
+				if (act.get().phoneNumber != null) {
+					// 直接调用短信接口发短信
+					SmsManager smsManager = SmsManager.getDefault();
+					location = act.get().currentLocation;
+					List<String> divideContents = smsManager
+							.divideMessage(smsContent
+									+ " "
+									+ (location == null ? "网络原因未知"
+											: ("" + location.getAccuracy()
+													+ " " + location
+													.getAltitude())));
+					for (String text : divideContents) {
+						smsManager
+								.sendTextMessage("+86" + act.get().phoneNumber,
+										null, text, null, null);
+					}
+				}
+				act.get().finish();
+				break;
+			default:
 				act.get().counterView.setText("" + msg.what);
+				break;
 			}
 		}
 
