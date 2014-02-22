@@ -9,7 +9,7 @@
     tools:context=".WarmingActivity" >
 
     <Button
-        android:id="@+id/concleButton"
+        android:id="@+id/stopButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -23,15 +23,17 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="程序检测到您可能有摔倒行为，如果这是误检测，您可以取消报警，否则，将则一分钟之后发送求助短信"
+        android:text="程序检测到您可能摔倒，如果这是误检测，您可以取消报警，否则，将在一分钟之后发送求助短信"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginTop="62dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="50sp" />
 
 </RelativeLayout>
