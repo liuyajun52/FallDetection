@@ -16,7 +16,7 @@ public class DataAnalysiser {
 	final int STILLSIZE = 20;
 	final Double TRANSFORM_TO_SECOND = Double.valueOf(1000000000);
 	final double ROTATION_THRESHHOLE = Math.PI / 3; // 旋转角度的阈值
-	final double VARIANCE_THRESHHOLE = 9.8*0.5; // 静止方差阈值
+	final double VARIANCE_THRESHHOLE = 9.8; // 静止方差阈值
 	final double ZD_THRESHHOLE = 0.4; // 竖直位移最小量的阈值
 	private DataArray dataArray;
 
