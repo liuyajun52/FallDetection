@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:title="使用者信息">
-        <EditTextPreference android:key="height" android:title="身高"/>
-        <ListPreference android:title="习惯放置手机的位置" android:key="position" android:entryValues="@array/position_array" android:entries="@array/position_array"/>
+
+    <PreferenceCategory android:title="使用者信息" >
+        <EditTextPreference
+            android:key="height"
+            android:title="身高" />
+
+        <ListPreference
+            android:entries="@array/position_array"
+            android:entryValues="@array/position_array"
+            android:key="position"
+            android:title="习惯放置手机的位置" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="报警设置">
-        <EditTextPreference android:key="phone" android:title="子女电话" android:summary="系统将在检测到跌倒后向该号码发送短信求助"/>
-        <RingtonePreference android:title="报警铃声" android:key="ringtone"/>
-        <CheckBoxPreference android:key="gps" android:title="精确地理位置信息" android:summaryOn="报警短信将包含精确地理位置信息" android:defaultValue="true"/>
+    <PreferenceCategory android:title="报警设置" >
+        <EditTextPreference
+            android:key="phone"
+            android:summary="系统将在检测到跌倒后向该号码发送短信求助"
+            android:title="子女电话" />
+
+        <RingtonePreference
+            android:key="ringtone"
+            android:title="报警铃声" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="gps"
+            android:summaryOn="报警短信将包含精确地理位置信息"
+            android:title="精确地理位置信息" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="serviceSwitch"
+            android:switchTextOff="关闭"
+            android:switchTextOn="开启"
+            android:title="监测服务开关" />
+        <Preference android:title="关于" android:key="about"/>
     </PreferenceCategory>
-    
 
 </PreferenceScreen>

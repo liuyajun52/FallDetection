@@ -42,6 +42,7 @@
             android:name="com.blacklighting.falldetection.WarmingActivity"
             android:label="@string/title_activity_warming" android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
+        <activity android:name="GuideActivity"></activity>
     </application>
 
 </manifest>
