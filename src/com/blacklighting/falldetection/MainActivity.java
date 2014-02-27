@@ -62,11 +62,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Intent i = new Intent(MainActivity.this, DetectionServer.class);
 		if (mPreferences.getBoolean("serviceSwitch", true)) {
-			Intent i = new Intent(MainActivity.this, DetectionServer.class);
 			startService(i);
 			switchButton.setText("监测服务已经开启");
 		} else {
+			stopService(i);
 			switchButton.setText("监测服务已经关闭");
 		}
 	}
@@ -98,7 +99,14 @@ public class MainActivity extends Activity implements OnClickListener {
 					true);
 			ed.putBoolean("serviceSwitch", !serviceState);
 			ed.commit();
-			switchButton.setText(!serviceState ? "监测服务已经开启" : "监测服务已经关闭");
+			Intent i = new Intent(MainActivity.this, DetectionServer.class);
+			if (!serviceState) {
+				startService(i);
+				switchButton.setText("监测服务已经开启");
+			} else {
+				stopService(i);
+				switchButton.setText("监测服务已经关闭");
+			}
 			Toast.makeText(MainActivity.this, serviceState ? "监测关闭" : "监测开启",
 					Toast.LENGTH_SHORT).show();
 			break;

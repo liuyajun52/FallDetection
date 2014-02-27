@@ -9,10 +9,10 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.widget.Toast;
 
 public class SettingActivity extends PreferenceActivity {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,7 +24,6 @@ public class SettingActivity extends PreferenceActivity {
 	@Override
 	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
 			Preference preference) {
-		// TODO Auto-generated method stub
 		String key = preference.getKey();
 		if (key.equals("about")) {
 			Builder builder = new Builder(SettingActivity.this);
@@ -44,7 +43,6 @@ public class SettingActivity extends PreferenceActivity {
 					@Override
 					public void onSharedPreferenceChanged(
 							SharedPreferences arg0, String arg1) {
-						// TODO Auto-generated method stub
 						if (arg1.equals("serviceSwitch")) {
 							boolean commond = arg0.getBoolean("serviceSwitch",
 									true);
