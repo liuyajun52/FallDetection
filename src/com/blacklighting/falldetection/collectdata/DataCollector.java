@@ -45,7 +45,7 @@ public class DataCollector implements SensorEventListener {
 	File tempFile;
 
 	public static final int DATALENGTH = 200; // 数据结构链表的长度
-	float zThreshold = -14.0f; // z轴加速的的阈值
+	float zThreshold = -10.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
 	Context context;
