@@ -4,16 +4,12 @@
 package com.blacklighting.falldetection.collectdata;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Environment;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -42,10 +38,8 @@ public class DataCollector implements SensorEventListener {
 	private Sensor mGsensor;
 	private DataArray datas; // 存储一段时间之内的绝对坐标系内的加速度和旋转角度
 
-	File tempFile;
-
 	public static final int DATALENGTH = 200; // 数据结构链表的长度
-	float zThreshold = -10.0f; // z轴加速的的阈值
+	float zThreshold = -12.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
 	Context context;
@@ -72,14 +66,15 @@ public class DataCollector implements SensorEventListener {
 	}
 
 	public void beginCollectData() {
+		//注意这里的设置，虽然在点亮消耗上有些诟病，但是必须为FASTEST
 		mSensorManager.registerListener(this, mLinearSensor,
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mMagneticFieldSensor,
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mASensor,
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_FASTEST);
 		mSensorManager.registerListener(this, mGsensor,
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_FASTEST);
 
 	}
 
@@ -160,39 +155,12 @@ public class DataCollector implements SensorEventListener {
 			datas.addData(new DataStruct(arg0.timestamp,
 					linearAccelerometerValues, gValues.clone()));
 
-			if (tempz < zThreshold && !isCounting) {
+			if ((linearAccelerometerValues[2] < zThreshold||linearAccelerometerValues[2]>-zThreshold) && !isCounting) {
 				isCounting = true; // 当发现有数据超过阈值时开始计数
 			}
 			if (isCounting && ++counter == DATALENGTH / 2) {
 				isCounting = false;
 				Toast.makeText(context, " 一级触发", Toast.LENGTH_SHORT).show();
-				tempFile = new File(Environment.getExternalStorageDirectory()
-						+ "/" + "temp" + ".csv");
-				FileOutputStream out = null;
-				try {
-					out = new FileOutputStream(tempFile);
-					for (int i = 0; i < datas.size(); i++) {
-						out.write(("" + datas.get(i).getAccValueComponent(0)
-								+ "," + datas.get(i).getAccValueComponent(1)
-								+ "," + datas.get(i).getAccValueComponent(2) + "\n")
-								.getBytes());
-					}
-				} catch (FileNotFoundException e) {
-					
-					e.printStackTrace();
-				} catch (IOException e) {
-					//
-					e.printStackTrace();
-				} finally {
-					try {
-						out.flush();
-						out.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
 				DataAnalysiser analysiser = new DataAnalysiser(datas);
 				boolean analysisResult = analysiser.analysis();
 				if (analysisResult) {

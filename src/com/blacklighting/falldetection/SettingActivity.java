@@ -29,7 +29,7 @@ public class SettingActivity extends PreferenceActivity {
 			Builder builder = new Builder(SettingActivity.this);
 			builder.setTitle("关于")
 					.setMessage(
-							"电子科技大学\n黑色之光创意工作室\n刘亚军\n付敏\n谢弘宸\nliuyajun52@gmail.com")
+							"电子科技大学\n黑色之光创意工作室\n刘亚军(设计、算法、编码）\n付敏（设计、美工、文档）\n谢弘宸（测试、文档）\nliuyajun52@gmail.com")
 					.setPositiveButton("确定", null);
 			builder.create().show();
 
@@ -58,5 +58,4 @@ public class SettingActivity extends PreferenceActivity {
 				});
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
 	}
-
 }

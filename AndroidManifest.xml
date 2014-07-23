@@ -49,6 +49,10 @@
             android:name="com.blacklighting.falldetection.SettingActivity"
             android:label="@string/title_activity_setting" >
         </activity>
+        <activity
+            android:name="com.blacklighting.falldetection.FirstRunActivity"
+            android:label="@string/title_activity_first_run" >
+        </activity>
     </application>
 
 </manifest>

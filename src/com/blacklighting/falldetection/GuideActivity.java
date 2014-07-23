@@ -15,10 +15,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 public class GuideActivity extends Activity {
-	ImageView view1, view2;
+	ImageView view1, view2, view3, view4, view5;
 	private ArrayList<View> viewList = new ArrayList<View>();
 	ViewPager viewPager;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,11 +30,17 @@ public class GuideActivity extends Activity {
 		viewPager = (ViewPager) findViewById(R.id.guidepager);
 
 		view1 = new ImageView(this);
-		view1.setImageResource(R.drawable.first01);
+		view1.setImageResource(R.drawable.guide_01);
 		view2 = new ImageView(this);
-		view2.setImageResource(R.drawable.first02);
+		view2.setImageResource(R.drawable.guide_02);
+		view3 = new ImageView(this);
+		view3.setImageResource(R.drawable.guide_03);
+		view4 = new ImageView(this);
+		view4.setImageResource(R.drawable.guide_04);
+		view5 = new ImageView(this);
+		view5.setImageResource(R.drawable.guide_05);
 
-		view2.setOnClickListener(new OnClickListener() {
+		view5.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -44,6 +50,10 @@ public class GuideActivity extends Activity {
 
 		viewList.add(view1);
 		viewList.add(view2);
+		viewList.add(view3);
+		viewList.add(view4);
+		viewList.add(view5);
+
 		MyViewPagerAdapter adpater = new MyViewPagerAdapter(viewList);
 		viewPager.setAdapter(adpater);
 
@@ -62,7 +72,7 @@ public class GuideActivity extends Activity {
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) { 
+		public Object instantiateItem(ViewGroup container, int position) {
 			container.addView(mListViews.get(position), 0);// 添加页卡
 			return mListViews.get(position);
 		}
