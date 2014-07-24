@@ -15,9 +15,9 @@ public class DataAnalysiser {
 	final int AVERAGESIZE = 10;
 	final int STILLSIZE = 20;
 	final Double TRANSFORM_TO_SECOND = Double.valueOf(1000000000);
-	final double ROTATION_THRESHHOLE = Math.PI / 3; // 旋转角度的阈值
-	final double VARIANCE_THRESHHOLE = 9.8; // 静止方差阈值
-	final double ZD_THRESHHOLE = 0.4; // 竖直位移最小量的阈值
+	final double ROTATION_THRESHHOLE = Math.PI / 4; // 旋转角度的阈值
+	final double VARIANCE_THRESHHOLE = 0.8; // 静止方差阈值
+	final double ZD_THRESHHOLE = 2; // 竖直位移最小量的阈值
 	private DataArray dataArray;
 
 	public DataAnalysiser(DataArray dataArray) {
@@ -66,7 +66,7 @@ public class DataAnalysiser {
 
 		double angleOfRotation = Math.acos(cosine);
 
-		return angleOfRotation > ROTATION_THRESHHOLE;
+		return  angleOfRotation> ROTATION_THRESHHOLE;
 	}
 
 	/**
@@ -105,10 +105,10 @@ public class DataAnalysiser {
 		endAccValuesVariance[1] /= STILLSIZE;
 		endAccValuesVariance[2] /= STILLSIZE;
 
-		// return (endAccValuesVariance[0] < VARIANCETHRESHHOLE)
-		// && (endAccValuesVariance[1] < VARIANCETHRESHHOLE)
-		// && (endAccValuesVariance[2] < VARIANCETHRESHHOLE);
-		return endAccValuesVariance[2] < VARIANCE_THRESHHOLE;
+		 return (endAccValuesVariance[0] < VARIANCE_THRESHHOLE)
+		 && (endAccValuesVariance[1] < VARIANCE_THRESHHOLE)
+		 && (endAccValuesVariance[2] < VARIANCE_THRESHHOLE);
+//		return endAccValuesVariance[2] < VARIANCE_THRESHHOLE;
 
 	}
 

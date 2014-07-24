@@ -3,8 +3,6 @@
  */
 package com.blacklighting.falldetection.collectdata;
 
-import java.io.File;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -38,8 +36,8 @@ public class DataCollector implements SensorEventListener {
 	private Sensor mGsensor;
 	private DataArray datas; // 存储一段时间之内的绝对坐标系内的加速度和旋转角度
 
-	public static final int DATALENGTH = 200; // 数据结构链表的长度
-	float zThreshold = -12.0f; // z轴加速的的阈值
+	public static final int DATALENGTH = 250; // 数据结构链表的长度
+	float zThreshold = -14.0f; // z轴加速的的阈值
 	int counter = 0; // 发现超出阈值之后计数的计数器
 	boolean isCounting = false; // 是否开始计数
 	Context context;
