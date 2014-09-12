@@ -17,16 +17,16 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.AppCompat" >
         <activity
             android:name="com.blacklighting.falldetection.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
         </activity>
 
         <receiver android:name="com.blacklighting.falldetection.BootReceiver" >
@@ -52,6 +52,15 @@
         <activity
             android:name="com.blacklighting.falldetection.FirstRunActivity"
             android:label="@string/title_activity_first_run" >
+        </activity>
+        <activity
+            android:name="com.blacklighting.falldetection.ShouhuanActivity"
+            android:label="@string/title_activity_shouhuan" android:theme="@style/Theme.AppCompat">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

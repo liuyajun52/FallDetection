@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
     android:orientation="vertical"
     android:weightSum="1" >
 
     <Button
-        android:id="@+id/guideButton"
+        android:id="@+id/falldecButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="7dp"
         android:layout_weight="0.30"
-        android:background="#99CC00"
-        android:text="向导"
+        android:background="#4E5AFF"
+        android:text="跌倒检测"
         android:textSize="30dp" />
 
     <LinearLayout
@@ -23,35 +21,35 @@
         android:layout_weight="0.30" >
 
         <Button
-            android:id="@+id/settingButton"
+            android:id="@+id/heartButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="7dp"
             android:layout_weight="1.2"
-            android:background="#FF8800"
-            android:text="全部设置"
+            android:background="#E363FF"
+            android:text="心率检测"
             android:textSize="30dp" />
 
         <Button
-            android:id="@+id/aboutButton"
+            android:id="@+id/heatButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="7dp"
             android:layout_weight="0.8"
-            android:background="#AA66CC"
-            android:text="关于"
+            android:background="#FFFF34"
+            android:text="温度"
             android:textSize="30dp" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/switchButton"
+        android:id="@+id/heathButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="7dp"
         android:layout_weight="0.30"
-        android:background="#FF4444"
-        android:text="检测服务开关"
+        android:background="#73FFFD"
+        android:text="健康报表"
         android:textSize="30dp" />
 
     <RelativeLayout
