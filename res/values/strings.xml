@@ -8,5 +8,7 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_first_run">FirstRunActivity</string>
     <string name="title_activity_shouhuan">智能健康手环</string>
+    <string name="title_activity_xin_lv">XinLvActivity</string>
+    <string name="title_activity_wendu">WenduActivity</string>
 
 </resources>

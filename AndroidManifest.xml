@@ -22,11 +22,13 @@
             android:name="com.blacklighting.falldetection.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
 
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <receiver android:name="com.blacklighting.falldetection.BootReceiver" >
@@ -55,12 +57,22 @@
         </activity>
         <activity
             android:name="com.blacklighting.falldetection.ShouhuanActivity"
-            android:label="@string/title_activity_shouhuan" android:theme="@style/Theme.AppCompat">
+            android:label="@string/title_activity_shouhuan"
+            android:theme="@style/Theme.AppCompat" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.blacklighting.falldetection.XinLvActivity"
+            android:label="@string/title_activity_xin_lv"
+            android:theme="@style/Theme.AppCompat" >
+        </activity>
+        <activity
+            android:name="com.blacklighting.falldetection.WenduActivity"
+            android:label="@string/title_activity_wendu" >
         </activity>
     </application>
 
